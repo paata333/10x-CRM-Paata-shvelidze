@@ -500,6 +500,17 @@ button {
   font-size: 14px;
   margin-top: 4px;
 }
+
+.count-pill {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
 /* ==========================================================================
    State messages — loading / empty / error (P4.2)
    ========================================================================== */
@@ -645,12 +656,42 @@ html.theme-dark .spinner {
 .status-badge--won { background: var(--success-bg); color: var(--success); }
 .status-badge--lost { background: var(--danger-bg); color: var(--danger); }
 
-.count-pill {
-  font-family: var(--font-mono);
-  font-size: 12.5px;
-  color: var(--ink-soft);
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  padding: 4px 10px;
-  border-radius: 999px;
+@media (max-width: 860px) {
+  .app-shell {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: static;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .sidebar .brand-mark {
+    margin: 0 12px 0 4px;
+  }
+
+  .nav-links {
+    flex-direction: row;
+  }
+
+  .sidebar-spacer {
+    display: none;
+  }
+
+  .sidebar-foot {
+    flex-direction: row;
+    border-top: none;
+    border-left: 1px solid rgba(255, 255, 255, 0.14);
+    padding-top: 0;
+    padding-left: 12px;
+    margin-left: auto;
+  }
+
+  .content {
+    padding: 24px 20px;
+  }
 }
