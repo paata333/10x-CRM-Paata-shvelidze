@@ -1,7 +1,5 @@
 /* ==========================================================================
-   10X CRM — Clients page (P4.2 loading, P4.3 rendering)
-   Search, filters, sort, add, and delete land in later days — this page
-   currently does exactly two things end-to-end: load and display.
+   10X CRM — Clients page (P4: load, render, CRUD)
    ========================================================================== */
 
 function statusBadgeClass(status) {
@@ -93,8 +91,110 @@ async function loadAndRenderClients() {
   }
 }
 
+/* ---- Modal: Add Client (P4.4) ---- */
+
+function openAddClientModal() {
+  document.getElementById('add-client-modal-backdrop').classList.add('is-open');
+}
+
+function closeAddClientModal() {
+  document.getElementById('add-client-modal-backdrop').classList.remove('is-open');
+  document.getElementById('add-client-form').reset();
+  clearAllAddClientErrors();
+}
+
+function clearAllAddClientErrors() {
+  ['name', 'email', 'phone', 'company', 'dealValue'].forEach((fieldId) => {
+    clearFieldError(fieldId);
+  });
+}
+
+async function handleAddClient(event) {
+  event.preventDefault();
+  clearAllAddClientErrors();
+
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim().toLowerCase();
+  const phone = document.getElementById('phone').value.trim();
+  const company = document.getElementById('company').value.trim();
+  const dealValue = parseFloat(document.getElementById('dealValue').value);
+  const status = document.getElementById('status').value || 'Lead';
+
+  let hasError = false;
+  const clients = getClients();
+
+  if (name.length < 3) {
+    setFieldError('name', 'Name must be at least 3 characters');
+    hasError = true;
+  }
+
+  if (!isValidEmailShape(email)) {
+    setFieldError('email', 'Please enter a valid email address');
+    hasError = true;
+  } else if (clients.some((c) => c.email === email)) {
+    setFieldError('email', 'A client with this email already exists');
+    hasError = true;
+  }
+
+  if (phone && phone.length < 6) {
+    setFieldError('phone', 'Phone number looks too short');
+    hasError = true;
+  }
+
+  if (!dealValue || dealValue <= 0 || isNaN(dealValue)) {
+    setFieldError('dealValue', 'Deal value must be a positive number');
+    hasError = true;
+  }
+
+  if (hasError) return;
+
+  try {
+    await addClient({
+      name,
+      email,
+      phone,
+      company,
+      dealValue,
+      status,
+      image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + encodeURIComponent(name),
+    });
+
+    closeAddClientModal();
+    const allClients = getClients();
+    renderClients(allClients);
+    document.getElementById('client-count').textContent = `${allClients.length} clients`;
+    showToast('Client added ✓', 'success');
+  } catch (err) {
+    showToast('Failed to add client. Try again.', 'error');
+  }
+}
+
+async function deleteClientHandler(clientId) {
+  try {
+    await deleteClient(clientId);
+    const allClients = getClients();
+    renderClients(allClients);
+    document.getElementById('client-count').textContent = `${allClients.length} clients`;
+    showToast('Client deleted', 'success');
+  } catch (err) {
+    showToast('Failed to delete client.', 'error');
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   requireAuth();
   initShell('clients');
   loadAndRenderClients();
+
+  // Wire Add Client button
+  document.getElementById('add-client-btn').addEventListener('click', openAddClientModal);
+  
+  // Wire modal close button and backdrop click
+  document.getElementById('close-modal-btn').addEventListener('click', closeAddClientModal);
+  document.getElementById('add-client-modal-backdrop').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) closeAddClientModal();
+  });
+
+  // Wire Add Client form
+  document.getElementById('add-client-form').addEventListener('submit', handleAddClient);
 });
