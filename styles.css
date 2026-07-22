@@ -39,6 +39,36 @@
   --shadow-pop: 0 12px 32px rgba(18, 23, 43, 0.16);
 }
 
+/* Dark theme (P0.3) — same tokens, different values. Applied as a class
+   on <html> so it can be set before first paint (see inline head script
+   on every protected page) and avoid a flash of the wrong theme. */
+html.theme-dark {
+  --bg: #0F1320;
+  --surface: #171B2C;
+  --surface-2: #1D2238;
+  --border: #2A3050;
+  --ink: #F3F4F7;
+  --ink-soft: #A8AEC4;
+  --ink-faint: #6B7290;
+
+  --brand: #3E4C8F;
+  --brand-hover: #4C5CA8;
+  --accent: #E0AC57;
+  --accent-ink: #F3D9A8;
+
+  --success: #4FC28A;
+  --success-bg: rgba(79, 194, 138, 0.14);
+  --danger: #E2685D;
+  --danger-bg: rgba(226, 104, 93, 0.14);
+  --warning: #E0B04E;
+  --warning-bg: rgba(224, 176, 78, 0.14);
+  --info: #8C9BD9;
+  --info-bg: rgba(140, 155, 217, 0.14);
+
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.2), 0 8px 24px rgba(0, 0, 0, 0.3);
+  --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
 * {
   box-sizing: border-box;
 }
