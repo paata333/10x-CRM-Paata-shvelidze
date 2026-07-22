@@ -53,12 +53,30 @@ function renderClients(list) {
             <span class="${statusBadgeClass(client.status)}">${client.status}</span>
             <span class="client-card__deal">${formatMoney(client.dealValue)}</span>
           </div>
+          <div class="client-card__actions">
+            <button class="btn btn-card btn-danger delete-client-btn" data-id="${client.id}" type="button">Delete</button>
+          </div>
         </div>
       </div>
     `)
     .join('');
 
   container.innerHTML = `<div class="client-grid">${cardsHtml}</div>`;
+  
+  // Wire delete buttons
+  document.querySelectorAll('.delete-client-btn').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const clientId = parseInt(btn.dataset.id, 10);
+      const clients = getClients();
+      const client = clients.find((c) => c.id === clientId);
+      if (!client) return;
+      
+      if (confirm(`Delete this client? This cannot be undone.`)) {
+        deleteClientHandler(clientId);
+      }
+    });
+  });
 }
 
 function renderLoading() {
