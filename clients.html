@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clients · 10X CRM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="css/styles.css" />
+  <script>
+    // Applied inline, before first paint, so there's no flash of the wrong theme.
+    if (localStorage.getItem('crm_theme') === 'dark') {
+      document.documentElement.classList.add('theme-dark');
+    }
+  </script>
+</head>
+<body>
+  <script src="js/guard.js"></script>
+  <script>requireAuth();</script>
+
+  <div class="app-shell">
+    <div id="sidebar-root"></div>
+
+    <main class="content">
+      <div class="content-header">
+        <div>
+          <h1>Clients</h1>
+          <p class="content-sub">Everyone in your pipeline, in one place.</p>
+        </div>
+        <span class="count-pill" id="client-count">Loading…</span>
+      </div>
+
+      <div id="clients-area"></div>
+    </main>
+  </div>
+
+  <script src="js/ui.js"></script>
+  <script src="js/shell.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/clients.js"></script>
+</body>
+</html>
