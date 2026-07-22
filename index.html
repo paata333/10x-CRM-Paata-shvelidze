@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Log In · 10X CRM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Runs first and synchronously: an already-authenticated user is sent
+       straight to the dashboard instead of seeing the login form again. -->
+  <script src="js/guard.js"></script>
+  <script>redirectIfAuthed();</script>
+
+  <main class="auth-shell">
+    <div class="auth-card">
+      <div class="brand-mark">
+        <span class="brand-mark__glyph">×10</span>
+        <span class="brand-mark__text">10X CRM</span>
+      </div>
+
+      <h1>Welcome back</h1>
+      <p class="auth-sub">Log in to pick up where you left off.</p>
+
+      <div class="form-alert" id="login-alert" role="alert"></div>
+
+      <form id="login-form" novalidate>
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="text" id="email" name="email" placeholder="jane@company.com" autocomplete="email" />
+          <div class="field-error" id="email-error"></div>
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Your password" autocomplete="current-password" />
+          <div class="field-error" id="password-error"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Log In</button>
+      </form>
+
+      <div class="auth-footer">
+        Don't have an account? <a href="signup.html">Sign up</a>
+      </div>
+    </div>
+  </main>
+
+  <script src="ui.js"></script>
+  <script src="auth.js"></script>
+  <script>initLoginForm();</script>
+</body>
+</html>
