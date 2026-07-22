@@ -50,3 +50,62 @@ async function ensureClientsLoaded() {
   saveClients(clients);
   return clients;
 }
+
+/**
+ * Adds a new client to the state and persists to localStorage.
+ * Note: DummyJSON POST is mocked — it returns a response but doesn't persist
+ * server-side. We manage persistence ourselves on the client.
+ */
+async function addClient(clientData) {
+  // POST to DummyJSON (returns a mocked response with an id).
+  const response = await fetch('https://dummyjson.com/users/add', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(clientData),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to add client: ${response.status}`);
+  }
+
+  const apiResponse = await response.json();
+
+  // Build the full Client object using the API's response id + our fields.
+  const newClient = {
+    id: apiResponse.id,
+    name: clientData.name,
+    email: clientData.email,
+    phone: clientData.phone,
+    company: clientData.company,
+    image: clientData.image || 'https://api.dicebear.com/7.x/avataaars/svg',
+    status: clientData.status,
+    dealValue: clientData.dealValue,
+    notes: [],
+    createdAt: new Date().toISOString(),
+  };
+
+  // Add to the front of the clients array (unshift).
+  const clients = getClients();
+  clients.unshift(newClient);
+  saveClients(clients);
+
+  return newClient;
+}
+
+/**
+ * Deletes a client from state and persists.
+ * DummyJSON DELETE is mocked — we handle the removal on the client side.
+ */
+async function deleteClient(clientId) {
+  const response = await fetch(`https://dummyjson.com/users/${clientId}`, {
+    method: 'DELETE',
+  });
+
+  // Even if DummyJSON returns 404 (it does for user-added clients),
+  // we still remove from our state, since that's the correct behavior.
+  const clients = getClients();
+  const filtered = clients.filter((c) => c.id !== clientId);
+  saveClients(filtered);
+
+  return filtered;
+}
