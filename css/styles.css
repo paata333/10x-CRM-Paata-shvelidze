@@ -814,6 +814,80 @@ html.theme-dark .spinner {
   gap: 8px;
   margin-top: 10px;
 }
+/* ==========================================================================
+   Search & Filter UI (P4.7)
+   ========================================================================== */
+
+.search-input {
+  width: 100%;
+  max-width: 260px;
+  padding: 10px 13px;
+  font-size: 14px;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: border-color 120ms ease;
+}
+
+.search-input::placeholder {
+  color: var(--ink-faint);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--brand);
+}
+
+.filter-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 120ms ease;
+}
+
+.chip:hover {
+  border-color: var(--brand);
+  background: var(--surface-2);
+  color: var(--brand);
+}
+
+.chip.is-active {
+  background: var(--brand);
+  color: #fff;
+  border-color: var(--brand);
+}
+
+.sort-select {
+  padding: 10px 13px;
+  font-size: 13.5px;
+  font-family: var(--font-body);
+  color: var(--ink-soft);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: border-color 120ms ease;
+}
+
+.sort-select:focus {
+  outline: none;
+  border-color: var(--brand);
+}
 
 .btn-card {
   width: auto;
