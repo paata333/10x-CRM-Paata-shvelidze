@@ -289,7 +289,24 @@ async function deleteClientHandler(clientId) {
 document.addEventListener('DOMContentLoaded', () => {
   requireAuth();
   initShell('clients');
-  loadAndRenderClients();
+  
+  // Load and render
+  (async () => {
+    renderLoading();
+    try {
+      const clients = await ensureClientsLoaded();
+      renderFilterChips(clients);
+      updateClientsDisplay();
+      
+      // Wire search input
+      document.getElementById('search-input').addEventListener('input', handleSearchInput);
+      
+      // Wire sort select
+      document.getElementById('sort-select').addEventListener('change', handleSortChange);
+    } catch (err) {
+      renderLoadError();
+    }
+  })();
 
   // Wire Add Client button
   document.getElementById('add-client-btn').addEventListener('click', openAddClientModal);
