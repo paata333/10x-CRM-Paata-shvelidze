@@ -814,6 +814,14 @@ html.theme-dark .spinner {
   gap: 8px;
   margin-top: 10px;
 }
+
+.btn-card {
+  width: auto;
+  padding: 6px 12px;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
 /* ==========================================================================
    Search & Filter UI (P4.7)
    ========================================================================== */
@@ -889,9 +897,169 @@ html.theme-dark .spinner {
   border-color: var(--brand);
 }
 
-.btn-card {
-  width: auto;
-  padding: 6px 12px;
-  font-size: 12.5px;
-  font-weight: 600;
+/* ==========================================================================
+   Dashboard stats, pipeline, recent (P3)
+   ========================================================================== */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
 }
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-card);
+}
+
+.stat-card__label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 6px;
+}
+
+.stat-card__value {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.stat-card__sub {
+  font-size: 12px;
+  color: var(--ink-faint);
+  margin-top: 4px;
+}
+
+.dashboard-section {
+  margin-bottom: 28px;
+}
+
+.dashboard-section h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.pipeline-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.pipeline-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  text-align: center;
+}
+
+.pipeline-box__status {
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+}
+
+.pipeline-box__count {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.recent-clients-list {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.recent-client-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.recent-client-row:last-child {
+  border-bottom: none;
+}
+
+.recent-client-row__name {
+  flex: 1;
+  min-width: 0;
+  font-weight: 500;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recent-client-row__date {
+  font-size: 12px;
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+
+.welcome-banner {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.welcome-banner h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0;
+}
+
+.live-clock {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+
+@media (max-width: 680px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-input {
+    max-width: 100%;
+  }
+
+  .filter-chips {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pipeline-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .welcome-banner {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
