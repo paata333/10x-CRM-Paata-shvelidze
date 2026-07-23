@@ -25,6 +25,93 @@ function formatMoney(amount) {
   return `$${amount.toLocaleString('en-US')}`;
 }
 
+/* ---- Filter, search, sort (P4.7) ---- */
+
+let activeStatusFilter = 'All';
+let currentSearchQuery = '';
+let currentSortOption = 'newest';
+
+function getVisibleClients() {
+  const clients = getClients() || [];
+
+  // Step 1: Filter by status
+  let filtered = clients;
+  if (activeStatusFilter !== 'All') {
+    filtered = filtered.filter((c) => c.status === activeStatusFilter);
+  }
+
+  // Step 2: Search by name or company
+  if (currentSearchQuery.trim()) {
+    const q = currentSearchQuery.toLowerCase();
+    filtered = filtered.filter(
+      (c) =>
+        c.name.toLowerCase().includes(q) ||
+        c.company.toLowerCase().includes(q)
+    );
+  }
+
+  // Step 3: Sort
+  let sorted = [...filtered]; // copy to avoid mutating
+  switch (currentSortOption) {
+    case 'name':
+      sorted.sort((a, b) => a.name.localeCompare(b.name));
+      break;
+    case 'deal-value':
+      sorted.sort((a, b) => b.dealValue - a.dealValue);
+      break;
+    case 'newest':
+    default:
+      sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      break;
+  }
+
+  return sorted;
+}
+
+function updateClientsDisplay() {
+  const visible = getVisibleClients();
+  renderClients(visible);
+  document.getElementById('client-count').textContent = `${visible.length} of ${getClients().length} clients`;
+}
+
+function handleSearchInput(e) {
+  currentSearchQuery = e.target.value;
+  updateClientsDisplay();
+}
+
+function handleStatusFilter(status) {
+  activeStatusFilter = status;
+  // Update chip active state
+  document.querySelectorAll('.chip').forEach((chip) => {
+    chip.classList.toggle('is-active', chip.dataset.status === status);
+  });
+  updateClientsDisplay();
+}
+
+function handleSortChange(e) {
+  currentSortOption = e.target.value;
+  updateClientsDisplay();
+}
+
+function renderFilterChips(allClients) {
+  const container = document.getElementById('filter-chips');
+  if (!container) return;
+
+  const chips = ['All', 'Lead', 'Contacted', 'Won', 'Lost'];
+  const chipHtml = chips
+    .map((status) => {
+      const activeClass = activeStatusFilter === status ? ' is-active' : '';
+      return `<button class="chip${activeClass}" data-status="${status}" type="button">${status}</button>`;
+    })
+    .join('');
+
+  container.innerHTML = chipHtml;
+
+  container.querySelectorAll('.chip').forEach((btn) => {
+    btn.addEventListener('click', () => handleStatusFilter(btn.dataset.status));
+  });
+}
+
 function renderClients(list) {
   const container = document.getElementById('clients-area');
 
