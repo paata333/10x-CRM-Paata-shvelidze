@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile · 10X CRM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="css/styles.css" />
+  <script>
+    if (localStorage.getItem('crm_theme') === 'dark') {
+      document.documentElement.classList.add('theme-dark');
+    }
+  </script>
+
+</head>
+<body>
+  <script src="js/guard.js"></script>
+  <script>requireAuth();</script>
+
+  <div class="app-shell">
+    <div id="sidebar-root"></div>
+
+    <main class="content">
+      <div class="content-header">
+        <h1>Profile Settings</h1>
+        <p class="content-sub">Manage your account, security, and preferences.</p>
+      </div>
+
+      <!-- Modern Profile Header -->
+      <div class="profile-header">
+        <div class="profile-header-avatar" id="profile-avatar">—</div>
+        <div class="profile-header-info">
+          <div class="profile-header-name" id="profile-name">Loading…</div>
+          <div class="profile-header-meta" id="profile-email">—</div>
+          <div class="profile-header-meta" id="profile-member-since">—</div>
+        </div>
+      </div>
+
+      <!-- Settings Grid -->
+      <div class="profile-settings">
+        <!-- Account Settings -->
+        <div class="settings-section">
+          <div class="settings-section-title">
+            <span class="settings-section-icon">👤</span>
+            Account
+          </div>
+          <form id="edit-profile-form" novalidate>
+            <div class="settings-item">
+              <label for="edit-fullName">Full Name</label>
+              <input type="text" id="edit-fullName" placeholder="Jane Doe" />
+              <div class="field-error" id="edit-fullName-error"></div>
+            </div>
+
+            <div class="settings-item">
+              <label for="edit-company">Company</label>
+              <input type="text" id="edit-company" placeholder="Your company" />
+              <div class="field-error" id="edit-company-error"></div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 12px;">
+              Save Changes
+            </button>
+          </form>
+        </div>
+
+        <!-- Security Settings -->
+        <div class="settings-section">
+          <div class="settings-section-title">
+            <span class="settings-section-icon">🔐</span>
+            Security
+          </div>
+          <form id="change-password-form" novalidate>
+            <div class="settings-item">
+              <label for="current-password">Current Password</label>
+              <input type="password" id="current-password" placeholder="Your current password" />
+              <div class="field-error" id="current-password-error"></div>
+            </div>
+
+            <div class="settings-item">
+              <label for="new-password">New Password</label>
+              <input type="password" id="new-password" placeholder="At least 8 characters" />
+              <div class="field-error" id="new-password-error"></div>
+            </div>
+
+            <div class="settings-item">
+              <label for="confirm-new-password">Confirm New Password</label>
+              <input type="password" id="confirm-new-password" placeholder="Re-enter your password" />
+              <div class="field-error" id="confirm-new-password-error"></div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 12px;">
+              Change Password
+            </button>
+          </form>
+        </div>
+
+        <!-- Data Management -->
+        <div class="settings-section data-section">
+          <div class="settings-section-title">
+            <span class="settings-section-icon">⚙️</span>
+            Data & Privacy
+          </div>
+          <div class="data-warning">
+            ⚠️ Resetting your data will reload all clients from the API. This action cannot be undone.
+          </div>
+          <p style="font-size: 13px; color: var(--ink-soft); margin-bottom: 16px;">
+            Clear all your CRM data and start fresh. Useful if you want to reset your test environment or reload sample data.
+          </p>
+          <button id="reset-data-btn" class="btn btn-danger" style="width: 100%;">
+            Reset CRM Data
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/ui.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/shell.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/profile.js"></script>
+</body>
+</html>
