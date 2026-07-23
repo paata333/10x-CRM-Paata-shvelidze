@@ -164,6 +164,114 @@ function renderClients(list) {
       }
     });
   });
+
+  // Wire details modal on card click
+  openDetailsOnCardClick();
+}
+
+let selectedClientId = null;
+
+function openDetailsModal(clientId) {
+  selectedClientId = clientId;
+  const clients = getClients();
+  const client = clients.find((c) => c.id === clientId);
+  if (!client) return;
+
+  // Render header
+  document.getElementById('details-avatar').src = client.image;
+  document.getElementById('details-avatar').onerror = function() {
+    this.style.display = 'none';
+  };
+  document.getElementById('details-name').textContent = client.name;
+  document.getElementById('details-company').textContent = client.company || '—';
+
+  // Render info fields
+  document.getElementById('details-email').textContent = client.email;
+  document.getElementById('details-phone').textContent = client.phone || '—';
+  document.getElementById('details-status').textContent = client.status;
+  document.getElementById('details-status').className = statusBadgeClass(client.status);
+  document.getElementById('details-deal-value').textContent = formatMoney(client.dealValue);
+  document.getElementById('details-since').textContent = new Date(client.createdAt).toLocaleDateString();
+
+  // Render notes
+  renderNotesList(client.notes);
+
+  // Show modal
+  document.getElementById('details-modal').classList.add('is-open');
+}
+
+function closeDetailsModal() {
+  document.getElementById('details-modal').classList.remove('is-open');
+  selectedClientId = null;
+  document.getElementById('add-note-input').value = '';
+}
+
+function renderNotesList(notes) {
+  const container = document.getElementById('notes-list');
+  if (notes.length === 0) {
+    container.innerHTML = '<div style="font-size:13px; color:var(--ink-faint); text-align:center; padding:12px;">No notes yet.</div>';
+    return;
+  }
+
+  const html = notes
+    .map(
+      (note) => `
+    <div class="note-item">
+      <div class="note-text">${note.text}</div>
+      <div class="note-date">${note.date}</div>
+    </div>
+  `
+    )
+    .join('');
+
+  container.innerHTML = html;
+}
+
+function handleAddNote() {
+  if (!selectedClientId) return;
+
+  const input = document.getElementById('add-note-input');
+  const noteText = input.value.trim();
+
+  if (!noteText) return;
+
+  const clients = getClients();
+  const client = clients.find((c) => c.id === selectedClientId);
+  if (!client) return;
+
+  client.notes.push({
+    text: noteText,
+    date: new Date().toLocaleString(),
+  });
+
+  saveClients(clients);
+  renderNotesList(client.notes);
+  input.value = '';
+}
+
+function handleRemindMe() {
+  if (!selectedClientId) return;
+
+  const clients = getClients();
+  const client = clients.find((c) => c.id === selectedClientId);
+  if (!client) return;
+
+  showToast('Reminder set ✓', 'success');
+
+  setTimeout(() => {
+    showToast(`⏰ Follow up: ${client.name}`, 'info', 5000);
+  }, 60000);
+}
+
+function openDetailsOnCardClick() {
+  document.querySelectorAll('.client-card').forEach((card) => {
+    card.addEventListener('click', (e) => {
+      // Don't open if clicking delete button
+      if (e.target.closest('.delete-client-btn')) return;
+      const clientId = parseInt(card.dataset.id, 10);
+      openDetailsModal(clientId);
+    });
+  });
 }
 
 function renderLoading() {
@@ -319,4 +427,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Wire Add Client form
   document.getElementById('add-client-form').addEventListener('submit', handleAddClient);
+
+  // Wire details modal close button and backdrop click
+  document.getElementById('close-details-modal-btn').addEventListener('click', closeDetailsModal);
+  document.getElementById('details-modal').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) closeDetailsModal();
+  });
+
+  // Wire note handlers
+  document.getElementById('add-note-btn').addEventListener('click', handleAddNote);
+  document.getElementById('add-note-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') handleAddNote();
+  });
+
+  document.getElementById('remind-btn').addEventListener('click', handleRemindMe);
 });

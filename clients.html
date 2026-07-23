@@ -109,6 +109,65 @@
     </div>
   </div>
 
+  <!-- Client Details Modal (P4.8) -->
+  <div class="details-modal" id="details-modal">
+    <div class="details-modal-content">
+      <button class="details-modal-close" id="close-details-modal-btn" type="button" aria-label="Close">×</button>
+      
+      <!-- Header -->
+      <div class="details-header">
+        <img class="details-avatar" id="details-avatar" src="" alt="" />
+        <div class="details-header-info">
+          <h2 id="details-name">—</h2>
+          <p id="details-company">—</p>
+        </div>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="details-section">
+        <div class="details-section-title">Contact Info</div>
+        <div class="details-field">
+          <span class="details-field-label">Email</span>
+          <span class="details-field-value" id="details-email">—</span>
+        </div>
+        <div class="details-field">
+          <span class="details-field-label">Phone</span>
+          <span class="details-field-value" id="details-phone">—</span>
+        </div>
+      </div>
+
+      <!-- Deal Info -->
+      <div class="details-section">
+        <div class="details-section-title">Deal Info</div>
+        <div class="details-field">
+          <span class="details-field-label">Status</span>
+          <span class="details-field-value" id="details-status">—</span>
+        </div>
+        <div class="details-field">
+          <span class="details-field-label">Deal Value</span>
+          <span class="details-field-value" id="details-deal-value">—</span>
+        </div>
+        <div class="details-field">
+          <span class="details-field-label">Client Since</span>
+          <span class="details-field-value" id="details-since">—</span>
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div class="details-section">
+        <div class="details-section-title">Notes</div>
+        <div class="notes-list" id="notes-list"></div>
+        <div class="add-note-form">
+          <input type="text" id="add-note-input" placeholder="Write a note…" />
+          <button class="btn btn-primary" id="add-note-btn" type="button">Add</button>
+        </div>
+      </div>
+
+      <!-- Reminder -->
+      <button class="remind-btn" id="remind-btn" type="button">⏰ Remind me in 1 min</button>
+    </div>
+  </div>
+
   <script src="js/ui.js"></script>
   <script src="js/shell.js"></script>
   <script src="js/data.js"></script>
