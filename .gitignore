@@ -1,0 +1,25 @@
+cat > /home/claude/10x-crm/.gitignore << 'EOF'
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# IDE/Editor
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Environment
+.env
+.env.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# Node (if you add npm later)
+node_modules/
+package-lock.json
+EOF
