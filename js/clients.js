@@ -2,6 +2,38 @@
    10X CRM — Clients page (P4: load, render, CRUD)
    ========================================================================== */
 
+/* ---- Shared field validation helpers (from auth.js) ---- */
+
+function setFieldError(inputId, message) {
+  const input = document.getElementById(inputId);
+  const errorEl = document.getElementById(`${inputId}-error`);
+  if (!input || !errorEl) return;
+  const wrapper = input.closest('.field') || input.closest('.settings-item');
+  if (wrapper) wrapper.classList.add('has-error');
+  errorEl.textContent = message;
+}
+
+function clearFieldError(inputId) {
+  const input = document.getElementById(inputId);
+  const errorEl = document.getElementById(`${inputId}-error`);
+  if (!input || !errorEl) return;
+  const wrapper = input.closest('.field') || input.closest('.settings-item');
+  if (wrapper) wrapper.classList.remove('has-error');
+  errorEl.textContent = '';
+}
+
+function isValidEmailShape(email) {
+  const at = email.indexOf('@');
+  if (at < 0) return false;
+  return email.indexOf('.', at) > at;
+}
+
+function clearAllErrors(fieldIds) {
+  fieldIds.forEach(clearFieldError);
+}
+
+/* ---- Client-specific functions ---- */
+
 function statusBadgeClass(status) {
   switch (status) {
     case 'Contacted': return 'status-badge status-badge--contacted';

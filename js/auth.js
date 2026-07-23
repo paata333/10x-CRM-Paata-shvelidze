@@ -31,7 +31,8 @@ function setFieldError(inputId, message) {
   const input = document.getElementById(inputId);
   const errorEl = document.getElementById(`${inputId}-error`);
   if (!input || !errorEl) return;
-  input.closest('.field').classList.add('has-error');
+  const wrapper = input.closest('.field') || input.closest('.settings-item');
+  if (wrapper) wrapper.classList.add('has-error');
   errorEl.textContent = message;
 }
 
@@ -39,7 +40,8 @@ function clearFieldError(inputId) {
   const input = document.getElementById(inputId);
   const errorEl = document.getElementById(`${inputId}-error`);
   if (!input || !errorEl) return;
-  input.closest('.field').classList.remove('has-error');
+  const wrapper = input.closest('.field') || input.closest('.settings-item');
+  if (wrapper) wrapper.classList.remove('has-error');
   errorEl.textContent = '';
 }
 
