@@ -128,7 +128,20 @@ function updateWelcome() {
   document.getElementById('welcome-text').textContent = `Welcome back, ${firstName}!`;
 }
 
-
+function updateLiveClock() {
+  const now = new Date();
+  const time = now.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  });
+  const date = now.toLocaleDateString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+  });
+  document.getElementById('live-clock').textContent = `${date}, ${time}`;
+}
 
 async function initDashboard() {
   try {
