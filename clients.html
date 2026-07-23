@@ -36,6 +36,22 @@
 
       <div class="toolbar">
         <button class="btn btn-primary" id="add-client-btn" type="button">+ Add Client</button>
+        <input
+          type="text"
+          class="search-input"
+          id="search-input"
+          placeholder="Search by name or company…"
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="toolbar">
+        <div class="filter-chips" id="filter-chips"></div>
+        <select class="sort-select" id="sort-select">
+          <option value="newest">Newest first</option>
+          <option value="name">Name A→Z</option>
+          <option value="deal-value">Deal value: high → low</option>
+        </select>
       </div>
 
       <div id="clients-area"></div>
