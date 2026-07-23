@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard · 10X CRM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="css/styles.css" />
+  <script>
+    if (localStorage.getItem('crm_theme') === 'dark') {
+      document.documentElement.classList.add('theme-dark');
+    }
+  </script>
+</head>
+<body>
+  <script src="js/guard.js"></script>
+  <script>requireAuth();</script>
+
+  <div class="app-shell">
+    <div id="sidebar-root"></div>
+
+    <main class="content">
+      <!-- P3.1: Welcome banner with live clock -->
+      <div class="welcome-banner">
+        <h2 id="welcome-text">Welcome back!</h2>
+        <span class="live-clock" id="live-clock">—</span>
+      </div>
+
+      <!-- P3.2: Stat cards (4-column) -->
+      <div class="stats-grid" id="stats-grid"></div>
+
+      <!-- P3.3: Pipeline Overview -->
+      <div class="dashboard-section">
+        <h3>Pipeline Overview</h3>
+        <div class="pipeline-grid" id="pipeline-grid"></div>
+      </div>
+
+      <!-- P3.4: Recent Clients (last 5) -->
+      <div class="dashboard-section">
+        <h3>Recent Clients</h3>
+        <div class="recent-clients-list" id="recent-clients-list"></div>
+        <div style="text-align: center; padding: 16px;">
+          <a href="clients.html" style="font-size: 14px; color: var(--brand); text-decoration: none; font-weight: 600;">View all clients →</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/ui.js"></script>
+  <script src="js/shell.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
