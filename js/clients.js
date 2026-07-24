@@ -66,6 +66,7 @@ let serverSearchIds = null; // Set of ids from GET /users/search, or null
 let searchDebounceTimer = null;
 
 const PAGE_SIZE = 9;
+const MAX_DEAL_VALUE = 100000000; // $100M — a realistic ceiling for a single deal
 let renderCount = PAGE_SIZE;
 let currentView = 'grid'; // 'grid' | 'kanban'
 
@@ -681,6 +682,9 @@ async function handleAddClient(event) {
 
   if (!dealValue || dealValue <= 0 || isNaN(dealValue)) {
     setFieldError('dealValue', 'Deal value must be a positive number');
+    hasError = true;
+  } else if (dealValue > MAX_DEAL_VALUE) {
+    setFieldError('dealValue', `Deal value can't exceed ${formatMoney(MAX_DEAL_VALUE)}`);
     hasError = true;
   }
 
