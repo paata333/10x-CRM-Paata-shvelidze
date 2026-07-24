@@ -48,6 +48,7 @@ Then open `http://localhost:8000` in your browser.
 ## Live Demo
 
 [Deploy to Vercel or Netlify and link here]
+https://10x-crm-paata-shvelidze.vercel.app/
 
 ## Test Account
 
