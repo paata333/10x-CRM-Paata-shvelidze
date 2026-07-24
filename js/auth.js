@@ -1,38 +1,8 @@
 /* ==========================================================================
    10X CRM — Auth logic (P1 Sign Up, P2 Login)
+   getUsers/saveUsers/getSession/saveSession now live in guard.js, since
+   every protected page loads that file first.
    ========================================================================== */
-
-/* ---- storage helpers -------------------------------------------------- */
-
-function getUsers() {
-  const raw = localStorage.getItem('crm_users');
-  return raw ? JSON.parse(raw) : [];
-}
-
-function saveUsers(users) {
-  localStorage.setItem('crm_users', JSON.stringify(users));
-}
-
-function getSession() {
-  const raw = localStorage.getItem('crm_session') || sessionStorage.getItem('crm_session');
-  return raw ? JSON.parse(raw) : null;
-}
-
-/**
- * "Remember me" checked -> localStorage (survives browser restarts).
- * "Remember me" unchecked -> sessionStorage (gone when the tab closes).
- * Always clear the other one first so a later login can't leave two
- * conflicting sessions behind.
- */
-function saveSession(session, remember) {
-  localStorage.removeItem('crm_session');
-  sessionStorage.removeItem('crm_session');
-  if (remember) {
-    localStorage.setItem('crm_session', JSON.stringify(session));
-  } else {
-    sessionStorage.setItem('crm_session', JSON.stringify(session));
-  }
-}
 
 /* ---- field-level error helpers ----------------------------------------
    Every input lives inside a `.field` wrapper with a sibling
@@ -106,11 +76,10 @@ function initSignupForm() {
 
     const hasLetter = /[a-zA-Z]/.test(password);
     const hasDigit = /[0-9]/.test(password);
-    const hasOnlyValidChars = /^[a-zA-Z0-9!@#$%^&*_\-\.]+$/.test(password);  // ADD THIS LINE
-    if (password.length < 8 || !hasLetter || !hasDigit || !hasOnlyValidChars) {
+    if (password.length < 8 || !hasLetter || !hasDigit) {
       setFieldError(
         'password',
-        'Password must be at least 8 characters and contain a English letter and a number'
+        'Password must be at least 8 characters and contain a letter and a number'
       );
       hasError = true;
     }

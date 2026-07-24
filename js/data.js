@@ -25,13 +25,35 @@ async function searchClientsOnServer(query) {
   }
 }
 
+/**
+ * Each user's client list is stored under its own key, keyed off their
+ * session userId — otherwise every account would read and write the same
+ * shared "crm_clients" list. Returns null when there's no active session
+ * (shouldn't happen on a guarded page, but fail closed rather than
+ * silently touching the wrong data).
+ */
+function clientsStorageKey() {
+  const session = getSession();
+  return session ? `crm_clients_${session.userId}` : null;
+}
+
 function getClients() {
-  const raw = localStorage.getItem('crm_clients');
+  const key = clientsStorageKey();
+  if (!key) return null;
+  const raw = localStorage.getItem(key);
   return raw ? JSON.parse(raw) : null;
 }
 
 function saveClients(clients) {
-  localStorage.setItem('crm_clients', JSON.stringify(clients));
+  const key = clientsStorageKey();
+  if (!key) return;
+  localStorage.setItem(key, JSON.stringify(clients));
+}
+
+/** Used by "Reset CRM Data" on the Profile page. */
+function clearStoredClients() {
+  const key = clientsStorageKey();
+  if (key) localStorage.removeItem(key);
 }
 
 /** Turns one DummyJSON user record into a Client object (P4.2). */
@@ -76,22 +98,23 @@ async function ensureClientsLoaded() {
  * server-side. We manage persistence ourselves on the client.
  */
 async function addClient(clientData) {
-  // POST to DummyJSON (returns a mocked response with an id).
-  const response = await fetch('https://dummyjson.com/users/add', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(clientData),
-  });
-
-  if (!response.ok) {
-    throw new Error(`Failed to add client: ${response.status}`);
+  // POST to DummyJSON so the app exercises a real create request — but the
+  // mock always returns the *same* static id (e.g. 209) no matter how many
+  // times you call it, since it isn't actually tracking a growing dataset.
+  // Trusting that id would give every added client the same id, so we
+  // generate our own instead (same pattern used for new user accounts).
+  try {
+    await fetch('https://dummyjson.com/users/add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(clientData),
+    });
+  } catch (err) {
+    // Network hiccup — the client is still created locally below.
   }
 
-  const apiResponse = await response.json();
-
-  // Build the full Client object using the API's response id + our fields.
   const newClient = {
-    id: apiResponse.id,
+    id: Date.now() + Math.floor(Math.random() * 1000),
     name: clientData.name,
     email: clientData.email,
     phone: clientData.phone,
@@ -150,12 +173,17 @@ async function updateClient(clientId, updates) {
  * DummyJSON DELETE is mocked — we handle the removal on the client side.
  */
 async function deleteClient(clientId) {
-  const response = await fetch(`https://dummyjson.com/users/${clientId}`, {
-    method: 'DELETE',
-  });
+  // Same reasoning as updateClient's PUT: only ids 1-208 exist server-side.
+  if (clientId <= 208) {
+    try {
+      await fetch(`https://dummyjson.com/users/${clientId}`, {
+        method: 'DELETE',
+      });
+    } catch (err) {
+      // Network hiccup — local storage stays the source of truth regardless.
+    }
+  }
 
-  // Even if DummyJSON returns 404 (it does for user-added clients),
-  // we still remove from our state, since that's the correct behavior.
   const clients = getClients();
   const filtered = clients.filter((c) => c.id !== clientId);
   saveClients(filtered);

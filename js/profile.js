@@ -119,7 +119,7 @@ function handleResetData() {
     return;
   }
 
-  localStorage.removeItem('crm_clients');
+  clearStoredClients();
 
   (async () => {
     try {

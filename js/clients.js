@@ -638,6 +638,7 @@ function openEditClientModal(clientId) {
 function closeAddClientModal() {
   document.getElementById('add-client-modal-backdrop').classList.remove('is-open');
   document.getElementById('add-client-form').reset();
+  document.getElementById('add-client-submit-btn').disabled = false;
   clearAllAddClientErrors();
   editingClientId = null;
 }
@@ -650,6 +651,11 @@ function clearAllAddClientErrors() {
 
 async function handleAddClient(event) {
   event.preventDefault();
+
+  const submitBtn = document.getElementById('add-client-submit-btn');
+  if (submitBtn.disabled) return; // already submitting — ignore the double-click
+  submitBtn.disabled = true;
+
   clearAllAddClientErrors();
 
   const name = document.getElementById('name').value.trim();
@@ -688,7 +694,10 @@ async function handleAddClient(event) {
     hasError = true;
   }
 
-  if (hasError) return;
+  if (hasError) {
+    submitBtn.disabled = false;
+    return;
+  }
 
   try {
     if (editingClientId) {
@@ -711,6 +720,7 @@ async function handleAddClient(event) {
     updateClientsDisplay();
   } catch (err) {
     showToast(editingClientId ? 'Failed to update client. Try again.' : 'Failed to add client. Try again.', 'error');
+    submitBtn.disabled = false;
   }
 }
 

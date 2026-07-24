@@ -1,16 +1,50 @@
 /* ==========================================================================
-   10X CRM — Auth guard (P0.1)
-   One shared place for access-control logic; every page calls into this
-   instead of re-implementing the checks.
+   10X CRM — Auth guard (P0.1) + shared user/session storage
+   One shared place for access-control logic and the user/session storage
+   helpers, since every protected page loads this file first (before
+   auth.js, data.js, etc.) — anything another script needs at any point
+   belongs here, not in a page-specific file.
    ========================================================================== */
 
+/* ---- user storage ---- */
+
+function getUsers() {
+  const raw = localStorage.getItem('crm_users');
+  return raw ? JSON.parse(raw) : [];
+}
+
+function saveUsers(users) {
+  localStorage.setItem('crm_users', JSON.stringify(users));
+}
+
+/* ---- session storage ----
+   A session lives in one of two places depending on "Remember me":
+   localStorage when the user opted in (persists across browser restarts),
+   sessionStorage when they didn't (cleared the moment the tab closes). */
+
+function getSession() {
+  const raw = localStorage.getItem('crm_session') || sessionStorage.getItem('crm_session');
+  return raw ? JSON.parse(raw) : null;
+}
+
 /**
- * A session lives in one of two places depending on "Remember me":
- * localStorage when the user opted in (persists across browser restarts),
- * sessionStorage when they didn't (cleared the moment the tab closes).
+ * "Remember me" checked -> localStorage (survives browser restarts).
+ * "Remember me" unchecked -> sessionStorage (gone when the tab closes).
+ * Always clear the other one first so a later login can't leave two
+ * conflicting sessions behind.
  */
+function saveSession(session, remember) {
+  localStorage.removeItem('crm_session');
+  sessionStorage.removeItem('crm_session');
+  if (remember) {
+    localStorage.setItem('crm_session', JSON.stringify(session));
+  } else {
+    sessionStorage.setItem('crm_session', JSON.stringify(session));
+  }
+}
+
 function isLoggedIn() {
-  return localStorage.getItem('crm_session') !== null || sessionStorage.getItem('crm_session') !== null;
+  return getSession() !== null;
 }
 
 /**
