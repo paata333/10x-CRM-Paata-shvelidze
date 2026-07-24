@@ -94,10 +94,11 @@ function initSignupForm() {
 
     const hasLetter = /[a-zA-Z]/.test(password);
     const hasDigit = /[0-9]/.test(password);
-    if (password.length < 8 || !hasLetter || !hasDigit) {
+    const hasOnlyValidChars = /^[a-zA-Z0-9!@#$%^&*_\-\.]+$/.test(password);  // ADD THIS LINE
+    if (password.length < 8 || !hasLetter || !hasDigit || !hasOnlyValidChars) {
       setFieldError(
         'password',
-        'Password must be at least 8 characters and contain a letter and a number'
+        'Password must be at least 8 characters and contain a English letter and a number'
       );
       hasError = true;
     }
