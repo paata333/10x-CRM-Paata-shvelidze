@@ -91,6 +91,34 @@ function renderPipeline(pipeline) {
     .join('');
 
   container.innerHTML = html;
+
+  renderPipelineChart(pipeline);
+}
+
+function renderPipelineChart(pipeline) {
+  const container = document.getElementById('pipeline-chart');
+  if (!container) return;
+
+  const statuses = ['Lead', 'Contacted', 'Won', 'Lost'];
+  const total = statuses.reduce((sum, s) => sum + pipeline[s], 0) || 1;
+
+  const html = statuses
+    .map((status) => {
+      const count = pipeline[status];
+      const pct = Math.round((count / total) * 100);
+      return `
+      <div class="pipeline-chart__row">
+        <span class="pipeline-chart__label">${status}</span>
+        <div class="pipeline-chart__track">
+          <div class="pipeline-chart__fill pipeline-chart__fill--${status.toLowerCase()}" style="width:${pct}%"></div>
+        </div>
+        <span class="pipeline-chart__value">${count} (${pct}%)</span>
+      </div>
+    `;
+    })
+    .join('');
+
+  container.innerHTML = html;
 }
 
 function renderRecentClients(recent) {

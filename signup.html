@@ -50,6 +50,10 @@
         <div class="field">
           <label for="password">Password</label>
           <input type="password" id="password" name="password" placeholder="At least 8 characters" autocomplete="new-password" />
+          <div class="password-strength" id="password-strength">
+            <div class="password-strength__bar"><span></span><span></span><span></span></div>
+            <span class="password-strength__label"></span>
+          </div>
           <div class="field-error" id="password-error"></div>
         </div>
 
@@ -70,6 +74,6 @@
 
   <script src="js/ui.js"></script>
   <script src="js/auth.js"></script>
-  <script>initSignupForm();</script>
+  <script>initSignupForm(); initPasswordStrengthMeter();</script>
 </body>
 </html>

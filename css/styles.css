@@ -1129,6 +1129,11 @@ html.theme-dark .spinner {
   background: var(--info-bg);
 }
 
+.details-header-info {
+  flex: 1;
+  min-width: 0;
+}
+
 .details-header-info h2 {
   font-size: 18px;
   font-weight: 600;
@@ -1450,3 +1455,335 @@ html.theme-dark .spinner {
         flex-direction: column;
       }
     }
+
+/* ==========================================================================
+   New feature styles: remember-me checkbox, password strength, edit button,
+   kanban board, pipeline mini chart, CSV/load-more/view toggle, call timer,
+   keyboard-shortcut hint, easter egg.
+   ========================================================================== */
+
+/* ---- Checkbox field (Remember me) ---- */
+
+.checkbox-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin: -4px 0 20px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-field input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--brand);
+  cursor: pointer;
+}
+
+/* ---- Password strength meter ---- */
+
+.password-strength {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  min-height: 16px;
+}
+
+.password-strength__bar {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+
+.password-strength__bar span {
+  height: 4px;
+  flex: 1;
+  border-radius: 2px;
+  background: var(--border);
+  transition: background 0.15s ease;
+}
+
+.password-strength__label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-faint);
+}
+
+.password-strength.is-level-1 .password-strength__bar span:nth-child(1) { background: var(--danger); }
+.password-strength.is-level-1 .password-strength__label { color: var(--danger); }
+
+.password-strength.is-level-2 .password-strength__bar span:nth-child(1),
+.password-strength.is-level-2 .password-strength__bar span:nth-child(2) { background: var(--warning); }
+.password-strength.is-level-2 .password-strength__label { color: var(--warning); }
+
+.password-strength.is-level-3 .password-strength__bar span { background: var(--success); }
+.password-strength.is-level-3 .password-strength__label { color: var(--success); }
+
+/* ---- Card actions: Edit + Delete side by side ---- */
+
+.client-card__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.client-card__actions .btn-card {
+  flex: 1;
+}
+
+.btn-card.btn-secondary {
+  background: var(--surface-2);
+  color: var(--ink-soft);
+  border: 1px solid var(--border);
+}
+
+.btn-card.btn-secondary:hover {
+  background: var(--border);
+  color: var(--ink);
+}
+
+/* ---- Toolbar view toggle (Grid / Kanban) + CSV export ---- */
+
+.view-toggle {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.view-toggle button {
+  border: none;
+  background: var(--surface);
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.view-toggle button + button {
+  border-left: 1px solid var(--border);
+}
+
+.view-toggle button.is-active {
+  background: var(--brand);
+  color: #fff;
+}
+
+/* ---- Kanban board ---- */
+
+.kanban-board {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(220px, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+
+.kanban-column {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  min-height: 120px;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.kanban-column.is-drag-over {
+  background: var(--info-bg);
+  border-color: var(--brand);
+}
+
+.kanban-column__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--ink);
+  padding: 4px 6px 12px;
+}
+
+.kanban-column__count {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-faint);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 1px 8px;
+}
+
+.kanban-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-card);
+  padding: 12px;
+  margin-bottom: 10px;
+  cursor: grab;
+}
+
+.kanban-card:active {
+  cursor: grabbing;
+}
+
+.kanban-card.is-dragging {
+  opacity: 0.4;
+}
+
+.kanban-card__name {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.kanban-card__meta {
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-top: 2px;
+}
+
+.kanban-card__deal {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--accent-ink);
+  margin-top: 6px;
+}
+
+.kanban-empty {
+  font-size: 12px;
+  color: var(--ink-faint);
+  text-align: center;
+  padding: 12px 4px;
+}
+
+@media (max-width: 860px) {
+  .kanban-board {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- Load more ---- */
+
+.load-more-row {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0 4px;
+}
+
+/* ---- Pipeline mini chart (dashboard) ---- */
+
+.pipeline-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.pipeline-chart__row {
+  display: grid;
+  grid-template-columns: 90px 1fr 56px;
+  align-items: center;
+  gap: 10px;
+}
+
+.pipeline-chart__label {
+  font-size: 13px;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+
+.pipeline-chart__track {
+  height: 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.pipeline-chart__fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.pipeline-chart__fill--lead { background: var(--info); }
+.pipeline-chart__fill--contacted { background: var(--warning); }
+.pipeline-chart__fill--won { background: var(--success); }
+.pipeline-chart__fill--lost { background: var(--danger); }
+
+.pipeline-chart__value {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-faint);
+  text-align: right;
+}
+
+/* ---- Call timer (details modal) ---- */
+
+.call-timer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  margin-top: 14px;
+}
+
+.call-timer__display {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.call-timer__display.is-running {
+  color: var(--success);
+}
+
+/* ---- Keyboard shortcut hint ---- */
+
+.shortcut-hint {
+  font-size: 12px;
+  color: var(--ink-faint);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+kbd {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 1px 6px;
+  color: var(--ink-soft);
+}
+
+/* ---- Easter egg ---- */
+
+@keyframes egg-pop {
+  0% { transform: scale(1) rotate(0deg); }
+  30% { transform: scale(1.25) rotate(-8deg); }
+  60% { transform: scale(1.1) rotate(6deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+.brand-mark.is-egg {
+  animation: egg-pop 0.5s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-mark.is-egg {
+    animation: none;
+  }
+}

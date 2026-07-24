@@ -54,7 +54,22 @@
         </select>
       </div>
 
+      <div class="toolbar">
+        <div class="view-toggle" id="view-toggle">
+          <button type="button" data-view="grid" class="is-active">Grid</button>
+          <button type="button" data-view="kanban">Kanban</button>
+        </div>
+        <div style="display:flex; align-items:center; gap:16px;">
+          <span class="shortcut-hint"><kbd>/</kbd> search <kbd>N</kbd> add client <kbd>Esc</kbd> close</span>
+          <button class="btn btn-secondary" id="export-csv-btn" type="button">Export CSV</button>
+        </div>
+      </div>
+
       <div id="clients-area"></div>
+      <div id="kanban-area" style="display:none;"></div>
+      <div class="load-more-row" id="load-more-row" style="display:none;">
+        <button class="btn btn-secondary" id="load-more-btn" type="button">Load More</button>
+      </div>
     </main>
   </div>
 
@@ -62,7 +77,7 @@
   <div class="modal-backdrop" id="add-client-modal-backdrop">
     <div class="modal">
       <button class="modal-close" id="close-modal-btn" type="button" aria-label="Close">×</button>
-      <h2>Add Client</h2>
+      <h2 id="add-client-modal-title">Add Client</h2>
       <form id="add-client-form" novalidate>
         <div class="field">
           <label for="name">Name</label>
@@ -104,7 +119,7 @@
           </select>
         </div>
 
-        <button type="submit" class="btn btn-primary">Add Client</button>
+        <button type="submit" class="btn btn-primary" id="add-client-submit-btn">Add Client</button>
       </form>
     </div>
   </div>
@@ -121,6 +136,13 @@
           <h2 id="details-name">—</h2>
           <p id="details-company">—</p>
         </div>
+        <button class="btn btn-secondary" id="details-edit-btn" type="button" style="align-self:flex-start;">Edit</button>
+      </div>
+
+      <!-- Call timer -->
+      <div class="call-timer">
+        <span class="call-timer__display" id="call-timer-display">00:00</span>
+        <button class="btn btn-primary" id="call-timer-btn" type="button">Start Call</button>
       </div>
 
       <!-- Contact Info -->

@@ -14,12 +14,24 @@ function saveUsers(users) {
 }
 
 function getSession() {
-  const raw = localStorage.getItem('crm_session');
+  const raw = localStorage.getItem('crm_session') || sessionStorage.getItem('crm_session');
   return raw ? JSON.parse(raw) : null;
 }
 
-function saveSession(session) {
-  localStorage.setItem('crm_session', JSON.stringify(session));
+/**
+ * "Remember me" checked -> localStorage (survives browser restarts).
+ * "Remember me" unchecked -> sessionStorage (gone when the tab closes).
+ * Always clear the other one first so a later login can't leave two
+ * conflicting sessions behind.
+ */
+function saveSession(session, remember) {
+  localStorage.removeItem('crm_session');
+  sessionStorage.removeItem('crm_session');
+  if (remember) {
+    localStorage.setItem('crm_session', JSON.stringify(session));
+  } else {
+    sessionStorage.setItem('crm_session', JSON.stringify(session));
+  }
 }
 
 /* ---- field-level error helpers ----------------------------------------
@@ -181,12 +193,49 @@ function initLoginForm() {
       return;
     }
 
-    saveSession({
-      userId: match.id,
-      email: match.email,
-      loginAt: new Date().toISOString(),
-    });
+    const rememberBox = document.getElementById('remember-me');
+    const remember = rememberBox ? rememberBox.checked : true;
+
+    saveSession(
+      {
+        userId: match.id,
+        email: match.email,
+        loginAt: new Date().toISOString(),
+      },
+      remember
+    );
 
     window.location.href = 'dashboard.html';
+  });
+}
+
+/* ==========================================================================
+   Password strength meter (P1 signup)
+   ========================================================================== */
+
+function scorePasswordStrength(password) {
+  if (!password) return { label: '', level: 0 };
+
+  let score = 0;
+  if (password.length >= 8) score++;
+  if (password.length >= 12) score++;
+  if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++;
+  if (/[0-9]/.test(password)) score++;
+  if (/[^a-zA-Z0-9]/.test(password)) score++;
+
+  if (score <= 1) return { label: 'Weak', level: 1 };
+  if (score <= 3) return { label: 'Medium', level: 2 };
+  return { label: 'Strong', level: 3 };
+}
+
+function initPasswordStrengthMeter() {
+  const input = document.getElementById('password');
+  const meter = document.getElementById('password-strength');
+  if (!input || !meter) return;
+
+  input.addEventListener('input', () => {
+    const { label, level } = scorePasswordStrength(input.value);
+    meter.className = 'password-strength' + (level ? ` is-level-${level}` : '');
+    meter.querySelector('.password-strength__label').textContent = label;
   });
 }

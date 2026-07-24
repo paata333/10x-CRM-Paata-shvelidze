@@ -5,6 +5,25 @@
    ========================================================================== */
 
 const CLIENTS_API_URL = 'https://dummyjson.com/users?limit=30';
+const CLIENTS_SEARCH_URL = 'https://dummyjson.com/users/search';
+
+/**
+ * Queries DummyJSON's server-side search and returns the set of matching
+ * ids. Used to widen the client-side name/company filter with whatever
+ * the "server" considers a match (e.g. other fields we don't search
+ * locally). Returns null on any failure so callers can fall back to
+ * local-only filtering instead of showing an empty result.
+ */
+async function searchClientsOnServer(query) {
+  try {
+    const response = await fetch(`${CLIENTS_SEARCH_URL}?q=${encodeURIComponent(query)}`);
+    if (!response.ok) return null;
+    const data = await response.json();
+    return new Set((data.users || []).map((u) => u.id));
+  } catch (err) {
+    return null;
+  }
+}
 
 function getClients() {
   const raw = localStorage.getItem('crm_clients');
@@ -90,6 +109,40 @@ async function addClient(clientData) {
   saveClients(clients);
 
   return newClient;
+}
+
+/**
+ * Updates an existing client (P4.9 — Edit Client) and persists.
+ * Sends the change to DummyJSON as a PUT (mocked, same as the other
+ * verbs here) so the app exercises the full CRUD/request-method set.
+ * Also used by Kanban drag & drop to update just the `status` field.
+ */
+async function updateClient(clientId, updates) {
+  // Only clients seeded from the initial GET (ids 1-208 in DummyJSON's real
+  // dataset) exist server-side. Clients added locally get a mock id from
+  // POST /users/add that DummyJSON never actually persists, so PUTting to
+  // it would just be a guaranteed, noisy 404 — skip the network call for
+  // those and go straight to the local update.
+  if (clientId <= 208) {
+    try {
+      await fetch(`https://dummyjson.com/users/${clientId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      });
+    } catch (err) {
+      // Network hiccup — local storage stays the source of truth regardless.
+    }
+  }
+
+  const clients = getClients();
+  const client = clients.find((c) => c.id === clientId);
+  if (!client) throw new Error('Client not found');
+
+  Object.assign(client, updates);
+  saveClients(clients);
+
+  return client;
 }
 
 /**

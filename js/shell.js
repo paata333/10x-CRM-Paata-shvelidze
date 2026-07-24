@@ -66,4 +66,37 @@ function initShell(activePage) {
 
   document.getElementById('theme-toggle-btn').addEventListener('click', toggleTheme);
   document.getElementById('logout-btn').addEventListener('click', logout);
+  initLogoEasterEgg();
+}
+
+/* ---- Easter egg: click the logo 5x within 2s ---- */
+
+const EGG_MESSAGES = [
+  "🚀 Revenue go brrr.",
+  "🥚 You found the secret stash of enthusiasm.",
+  "👀 Someone's avoiding their pipeline.",
+];
+
+function initLogoEasterEgg() {
+  const logo = document.querySelector('.sidebar .brand-mark');
+  if (!logo) return;
+
+  let clicks = 0;
+  let resetTimer = null;
+
+  logo.addEventListener('click', (e) => {
+    e.preventDefault();
+    clicks++;
+    clearTimeout(resetTimer);
+    resetTimer = setTimeout(() => { clicks = 0; }, 2000);
+
+    if (clicks >= 5) {
+      clicks = 0;
+      logo.classList.remove('is-egg');
+      void logo.offsetWidth; // restart animation
+      logo.classList.add('is-egg');
+      const msg = EGG_MESSAGES[Math.floor(Math.random() * EGG_MESSAGES.length)];
+      showToast(msg, 'info', 4000);
+    }
+  });
 }

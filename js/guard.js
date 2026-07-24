@@ -4,9 +4,13 @@
    instead of re-implementing the checks.
    ========================================================================== */
 
-/** Returns true if a user session is currently stored. */
+/**
+ * A session lives in one of two places depending on "Remember me":
+ * localStorage when the user opted in (persists across browser restarts),
+ * sessionStorage when they didn't (cleared the moment the tab closes).
+ */
 function isLoggedIn() {
-  return localStorage.getItem('crm_session') !== null;
+  return localStorage.getItem('crm_session') !== null || sessionStorage.getItem('crm_session') !== null;
 }
 
 /**
@@ -33,5 +37,6 @@ function redirectIfAuthed() {
 /** Clears the session and returns to the login page. Data is untouched. */
 function logout() {
   localStorage.removeItem('crm_session');
+  sessionStorage.removeItem('crm_session');
   window.location.href = 'index.html';
 }
